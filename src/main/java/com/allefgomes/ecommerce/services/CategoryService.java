@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.allefgomes.ecommerce.domain.Category;
 import com.allefgomes.ecommerce.repositories.CategoryRepository;
+import com.allefgomes.ecommerce.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class CategoryService {
@@ -15,8 +16,8 @@ public class CategoryService {
 	private CategoryRepository repo;
 	
 	public Category find(Integer id) {
-		Optional<Category> obj = repo.findById(id);
+		Optional<Category> category = repo.findById(id);
 		
-		return obj.orElse(null);
+		return category.orElseThrow(() -> new ObjectNotFoundException("Object not Found! Id: " + id));
 	}
 }
