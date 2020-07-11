@@ -17,9 +17,14 @@ public class CategoryResource {
 	@Autowired
 	private CategoryService categoryService;
 	
+	@RequestMapping(value="", method=RequestMethod.GET)
+	public ResponseEntity<?> index() {
+		return ResponseEntity.ok().body(categoryService.findAll());
+	}
+	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> show(@PathVariable Integer id) {
-		Category category = categoryService.find(id);
+		Category category = categoryService.findOne(id);
 		
 		return ResponseEntity.ok().body(category);
 	}

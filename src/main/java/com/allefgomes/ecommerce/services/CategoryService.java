@@ -1,5 +1,6 @@
 package com.allefgomes.ecommerce.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,13 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository repo;
 	
-	public Category find(Integer id) {
+	public List<Category> findAll() {
+		List<Category> categories = repo.findAll();
+		
+		return categories;
+	}
+	
+	public Category findOne(Integer id) {
 		Optional<Category> category = repo.findById(id);
 		
 		return category.orElseThrow(() -> new ObjectNotFoundException("Object not Found! Id: " + id));
