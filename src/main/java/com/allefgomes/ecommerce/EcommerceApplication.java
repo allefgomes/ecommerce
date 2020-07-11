@@ -1,5 +1,6 @@
 package com.allefgomes.ecommerce;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +12,21 @@ import com.allefgomes.ecommerce.domain.Address;
 import com.allefgomes.ecommerce.domain.Category;
 import com.allefgomes.ecommerce.domain.City;
 import com.allefgomes.ecommerce.domain.Client;
+import com.allefgomes.ecommerce.domain.Payment;
+import com.allefgomes.ecommerce.domain.PaymentByCard;
+import com.allefgomes.ecommerce.domain.PaymentBySlip;
 import com.allefgomes.ecommerce.domain.Product;
+import com.allefgomes.ecommerce.domain.Request;
 import com.allefgomes.ecommerce.domain.State;
 import com.allefgomes.ecommerce.domain.enums.ClientType;
+import com.allefgomes.ecommerce.domain.enums.StatePayment;
 import com.allefgomes.ecommerce.repositories.AddressRepository;
 import com.allefgomes.ecommerce.repositories.CategoryRepository;
 import com.allefgomes.ecommerce.repositories.CityRepository;
 import com.allefgomes.ecommerce.repositories.ClientRepository;
+import com.allefgomes.ecommerce.repositories.PaymentRepository;
 import com.allefgomes.ecommerce.repositories.ProductRepository;
+import com.allefgomes.ecommerce.repositories.RequestRepository;
 import com.allefgomes.ecommerce.repositories.StateRepository;
 
 @SpringBootApplication
@@ -36,6 +44,10 @@ public class EcommerceApplication implements CommandLineRunner{
 	private ClientRepository clientRepository;
 	@Autowired
 	private AddressRepository addressRepository;
+	@Autowired
+	private RequestRepository requestRepository;
+	@Autowired
+	private PaymentRepository paymentRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApplication.class, args);
@@ -82,5 +94,21 @@ public class EcommerceApplication implements CommandLineRunner{
 
 		clientRepository.saveAll(Arrays.asList(cli1));
 		addressRepository.saveAll(Arrays.asList(e1, e2));
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		Request ped1 = new Request(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
+		Request ped2 = new Request(null, sdf.parse("10/10/2017 19:35"), cli1, e2);
+
+		Payment pagto1 = new PaymentByCard(null, StatePayment.OK, ped1, 6);
+		ped1.setPayment(pagto1);
+
+		Payment pagto2 = new PaymentBySlip(null, StatePayment.PENDING, ped2, sdf.parse("20/10/2017 00:00"), null);
+		ped2.setPayment(pagto2);
+
+		cli1.getRequests().addAll(Arrays.asList(ped1, ped2));
+
+		requestRepository.saveAll(Arrays.asList(ped1, ped2));
+		paymentRepository.saveAll(Arrays.asList(pagto1, pagto2));
 	}
 }

@@ -37,6 +37,11 @@ public class Client implements Serializable {
 	@CollectionTable(name="PHONES")
 	private Set<String> phones = new HashSet<>();
 	
+	@JsonManagedReference
+	@OneToMany(mappedBy = "client")
+	private List<Request> requests = new ArrayList<>();
+	
+	
 	public Client() {}
 
 	public Client(Integer id, String name, String email, String cpfOrCnpj, ClientType clientType) {
@@ -103,6 +108,37 @@ public class Client implements Serializable {
 	public void setPhones(Set<String> phones) {
 		this.phones = phones;
 	}
-	
-	
+
+	public List<Request> getRequests() {
+		return requests;
+	}
+
+	public void setRequests(List<Request> requests) {
+		this.requests = requests;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Client other = (Client) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
 }
