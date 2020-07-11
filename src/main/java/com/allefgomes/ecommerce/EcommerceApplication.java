@@ -8,18 +8,25 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.allefgomes.ecommerce.domain.Category;
+import com.allefgomes.ecommerce.domain.City;
 import com.allefgomes.ecommerce.domain.Product;
+import com.allefgomes.ecommerce.domain.State;
 import com.allefgomes.ecommerce.repositories.CategoryRepository;
+import com.allefgomes.ecommerce.repositories.CityRepository;
 import com.allefgomes.ecommerce.repositories.ProductRepository;
+import com.allefgomes.ecommerce.repositories.StateRepository;
 
 @SpringBootApplication
 public class EcommerceApplication implements CommandLineRunner{
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
-	
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private StateRepository stateRepository;
+	@Autowired
+	private CityRepository cityRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApplication.class, args);
@@ -46,5 +53,13 @@ public class EcommerceApplication implements CommandLineRunner{
 		categoryRepository.saveAll(Arrays.asList(techCategory, cookieCategory));
 		productRepository.saveAll(Arrays.asList(computerProduct, printerProduct, cookieTopProduct, broomProduct));
 		
+		State state = new State(null, "Ceará");
+		City fortaleza = new City(null, "Fortaleza", state);
+		City caucaia = new City(null, "Caucaia", state);
+		
+		state.getCities().add(fortaleza);
+		
+		stateRepository.save(state);
+		cityRepository.saveAll(Arrays.asList(fortaleza, caucaia));
 	}
 }
