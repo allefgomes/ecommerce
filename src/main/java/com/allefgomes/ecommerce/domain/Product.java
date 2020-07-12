@@ -2,7 +2,9 @@ package com.allefgomes.ecommerce.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -36,11 +39,30 @@ public class Product implements Serializable {
 		return categories;
 	}
 
+	@OneToMany(mappedBy = "id.product")
+	private Set<RequestItem> items = new HashSet<>();
+	
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
 
 	public Product() {}
+	
+	public Product(Integer id, String name, Double price) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.price = price;
+	}
+	
+	public List<Request> getRequests() {
+		List<Request> requests = new ArrayList<>();
+		for (RequestItem x : items) {
+			requests.add(x.getRequest());
+		}
+		
+		return requests;
+	}
 
 	public Integer getId() {
 		return id;
@@ -65,13 +87,15 @@ public class Product implements Serializable {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
+	
 
-	public Product(Integer id, String name, Double price) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.price = price;
+	public Set<RequestItem> getItems() {
+		return items;
 	}
+
+	public void setItems(Set<RequestItem> items) {
+		this.items = items;
+	};
 
 	@Override
 	public int hashCode() {
@@ -96,5 +120,5 @@ public class Product implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	};
+	}
 }

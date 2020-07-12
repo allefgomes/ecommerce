@@ -2,6 +2,8 @@ package com.allefgomes.ecommerce.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -35,6 +38,9 @@ public class Request implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="address_id")
 	private Address addressToDeliver;
+	
+	@OneToMany(mappedBy = "id.request")
+	private Set<RequestItem> items = new HashSet<>();
 	
 	public Request() {}
 
@@ -85,7 +91,15 @@ public class Request implements Serializable {
 	public void setAddressToDeliver(Address addressToDeliver) {
 		this.addressToDeliver = addressToDeliver;
 	}
+	
+	public Set<RequestItem> getItems() {
+		return items;
+	}
 
+	public void setItems(Set<RequestItem> items) {
+		this.items = items;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
