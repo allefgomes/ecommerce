@@ -22,7 +22,7 @@ public class CategoryService {
 		return categories;
 	}
 	
-	public Category findOne(Integer id) {
+	public Category find(Integer id) {
 		Optional<Category> category = repo.findById(id);
 		
 		return category.orElseThrow(() -> new ObjectNotFoundException("Object not Found! Id: " + id));
@@ -32,5 +32,11 @@ public class CategoryService {
 		category.setId(null);
 		
 		return repo.save(category); 
+	}
+	
+	public Category update(Category category) {
+		find(category.getId());
+		
+		return repo.save(category);
 	}
 }
