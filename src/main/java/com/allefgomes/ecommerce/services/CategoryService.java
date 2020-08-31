@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.allefgomes.ecommerce.domain.Category;
 import com.allefgomes.ecommerce.repositories.CategoryRepository;
+import com.allefgomes.ecommerce.services.exceptions.DataIntegrityException;
 import com.allefgomes.ecommerce.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -39,4 +41,13 @@ public class CategoryService {
 		
 		return repo.save(category);
 	}
+	
+	public void delete(Integer id) {
+		find(id);
+		try {
+			repo.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityException("Not is possible exclude this category because has products");
+		}
+	} 
 }
