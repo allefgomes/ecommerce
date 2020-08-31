@@ -1,6 +1,7 @@
 package com.allefgomes.ecommerce.resources;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,10 @@ public class CategoryResource {
 	private CategoryService categoryService;
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public ResponseEntity<?> index() {
-		return ResponseEntity.ok().body(categoryService.findAll());
+	public ResponseEntity<List<Category>> index() {
+		List<Category> categories = categoryService.findAll();
+		
+		return ResponseEntity.ok().body(categories);
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
