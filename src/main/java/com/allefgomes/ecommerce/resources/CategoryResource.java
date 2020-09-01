@@ -2,6 +2,7 @@ package com.allefgomes.ecommerce.resources;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.allefgomes.ecommerce.domain.Category;
+import com.allefgomes.ecommerce.dto.CategoryDTO;
 import com.allefgomes.ecommerce.services.CategoryService;
 
 @RestController
@@ -23,10 +25,11 @@ public class CategoryResource {
 	private CategoryService categoryService;
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public ResponseEntity<List<Category>> index() {
+	public ResponseEntity<List<CategoryDTO>> index() {
 		List<Category> categories = categoryService.findAll();
+		List<CategoryDTO> categoriesDTO = categories.stream().map(category -> new CategoryDTO(category)).collect(Collectors.toList()); 
 		
-		return ResponseEntity.ok().body(categories);
+		return ResponseEntity.ok().body(categoriesDTO);
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
